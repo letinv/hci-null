@@ -28,7 +28,7 @@ export default function Header({ title, onBack }: HeaderProps) {
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-        <span className="flex-1 text-center text-gray-800 font-semibold text-sm">
+        <span className="flex-1 text-center text-gray-800 font-semibold text-sm capitalize">
           {title}
         </span>
         <button

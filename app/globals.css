@@ -28,3 +28,12 @@ body {
 .reph-gradient {
   background: linear-gradient(135deg, #fbc5d0 0%, #fef5e0 55%, #f5ee9a 100%);
 }
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.page-fade-in {
+  animation: pageFadeIn 220ms ease-out;
+}

@@ -7,6 +7,13 @@ const recentMoods = [
   { name: "Clean daylight", info: "6 photos · used 5×" },
 ];
 
+const recentImages = [
+  { id: 1, src: "https://picsum.photos/seed/rec1/200/200" },
+  { id: 2, src: "https://picsum.photos/seed/rec2/200/200" },
+  { id: 3, src: "https://picsum.photos/seed/rec3/200/200" },
+  { id: 4, src: "https://picsum.photos/seed/rec4/200/200" },
+];
+
 export default function HomePage() {
   const router = useRouter();
 
@@ -77,6 +84,18 @@ export default function HomePage() {
                   </p>
                   <p className="text-gray-400 text-xs mt-0.5">{mood.info}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent images */}
+        <div>
+          <p className="text-gray-800 font-semibold text-sm mb-3">Recent images</p>
+          <div className="grid grid-cols-4 gap-2">
+            {recentImages.map((img) => (
+              <div key={img.id} className="rounded-xl overflow-hidden aspect-square">
+                <img src={img.src} alt="" className="w-full h-full object-cover" />
               </div>
             ))}
           </div>

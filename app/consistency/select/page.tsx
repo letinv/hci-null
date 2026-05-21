@@ -12,11 +12,22 @@ const PHOTOS = Array.from({ length: 12 }, (_, i) => ({
 export default function ConsistencySelectPage() {
   const router = useRouter();
   const [selected, setSelected] = useState<number[]>([]);
+  const [showError, setShowError] = useState(false);
 
   const toggle = (id: number) => {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
+    if (showError) setShowError(false);
+  };
+
+  const handleNext = () => {
+    if (selected.length < 2) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+      return;
+    }
+    router.push("/consistency/style");
   };
 
   return (
@@ -69,15 +80,25 @@ export default function ConsistencySelectPage() {
         </div>
       </div>
 
-      <div className="px-5 py-4">
+      <div className="px-5 py-4 flex flex-col gap-2">
+        <div className={"flex items-center gap-2 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 transition-all duration-300" + (showError ? " opacity-100 translate-y-0" : " opacity-0 translate-y-2 pointer-events-none")}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0">
+            <circle cx="8" cy="8" r="7" stroke="#ef4444" strokeWidth="1.5" />
+            <path d="M8 5v3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="8" cy="11" r="0.75" fill="#ef4444" />
+          </svg>
+          <p className="text-red-500 text-xs font-medium">
+            Please select at least 2 photos to continue.
+          </p>
+        </div>
+
         <button
-          onClick={() => selected.length > 0 && router.push("/consistency/style")}
-          disabled={selected.length === 0}
-          className="w-full py-4 rounded-full text-gray-800 font-semibold text-sm disabled:opacity-40"
+          onClick={handleNext}
+          className="w-full py-4 rounded-full text-gray-800 font-semibold text-sm"
           style={{ background: "#f2c8d4" }}
         >
           {selected.length > 0
-            ? `Apply to ${selected.length} photo${selected.length > 1 ? "s" : ""} →`
+            ? `Apply to ${selected.length} photo${selected.length > 1 ? "s" : ""}`
             : "Select photos first"}
         </button>
       </div>

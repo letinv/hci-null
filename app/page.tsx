@@ -13,7 +13,7 @@ export default function SplashPage() {
       <div className="flex-1 flex flex-col items-center justify-center gap-7">
         {/* App icon */}
         <div className="w-40 h-40 bg-white rounded-[36px] shadow-2xl flex items-center justify-center">
-          <span className="text-[38px] font-black text-gray-900 tracking-tight">
+          <span className="text-[48px] font-bold text-gray-900 tracking-tight">
             RE :
           </span>
         </div>

@@ -18,11 +18,16 @@ const SETTINGS = [
 function LibraryContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isFromInput = searchParams.get("from") === "mood-input";
+  const from = searchParams.get("from");
+  const isFromMoodInput = from === "mood-input";
+  const isFromConsistency = from === "consistency-style";
+  const isSelectable = isFromMoodInput || isFromConsistency;
 
   const handleMoodSelect = (moodName: string) => {
-    if (isFromInput) {
+    if (isFromMoodInput) {
       router.push("/mood/input?mood=" + encodeURIComponent(moodName));
+    } else if (isFromConsistency) {
+      router.push("/consistency/style?mood=" + encodeURIComponent(moodName));
     }
   };
 
@@ -41,15 +46,15 @@ function LibraryContent() {
               <button
                 key={mood.name}
                 onClick={() => handleMoodSelect(mood.name)}
-                disabled={!isFromInput}
-                className={"bg-white rounded-2xl px-4 py-3 flex items-center gap-4 shadow-sm w-full text-left transition-all duration-150" + (isFromInput ? " active:scale-[0.98] active:bg-gray-50" : "")}
+                disabled={!isSelectable}
+                className={"bg-white rounded-2xl px-4 py-3 flex items-center gap-4 shadow-sm w-full text-left transition-all duration-150" + (isSelectable ? " active:scale-[0.98] active:bg-gray-50" : "")}
               >
                 <div className="w-12 h-12 rounded-2xl flex-shrink-0" style={{ background: "#f5ee9a" }} />
                 <div className="flex-1">
                   <p className="text-gray-900 font-semibold text-sm">{mood.name}</p>
                   <p className="text-gray-400 text-xs mt-0.5">{mood.info}</p>
                 </div>
-                {isFromInput && (
+                {isSelectable && (
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-gray-300">
                     <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>

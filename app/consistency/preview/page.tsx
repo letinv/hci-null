@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../../components/Header";
 
 const PREVIEW_PHOTOS = [
@@ -10,9 +10,11 @@ const PREVIEW_PHOTOS = [
   { label: "Photo 3", src: "https://picsum.photos/seed/batch3/200/250" },
 ];
 
-export default function ConsistencyPreviewPage() {
+function ConsistencyPreviewContent() {
   const router = useRouter();
-  const [consistency, setConsistency] = useState(55);
+  const searchParams = useSearchParams();
+  const initialConsistency = Number(searchParams.get("consistency") ?? 55);
+  const [consistency, setConsistency] = useState(initialConsistency);
 
   return (
     <div className="min-h-full flex flex-col bg-[#f2f2f2]">
@@ -72,7 +74,10 @@ export default function ConsistencyPreviewPage() {
             </div>
           </div>
 
-          <button className="w-full py-3.5 rounded-full border border-gray-200 text-gray-700 font-medium text-sm">
+          <button
+            onClick={() => router.push("/consistency/adjusting?consistency=" + consistency)}
+            className="w-full py-3.5 rounded-full border border-gray-200 text-gray-700 font-medium text-sm"
+          >
             Adjust consistency
           </button>
         </div>
@@ -86,5 +91,13 @@ export default function ConsistencyPreviewPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function ConsistencyPreviewPage() {
+  return (
+    <Suspense>
+      <ConsistencyPreviewContent />
+    </Suspense>
   );
 }
