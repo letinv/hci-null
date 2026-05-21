@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* RePh design tokens */
+  --reph-pink: #fbc5d0;
+  --reph-yellow: #f5ee9a;
+  --reph-cream: #fef5e0;
+  --reph-btn-pink: #f2c8d4;
+  --reph-nav-dark: #1c1c1e;
 }
 
 @theme inline {
@@ -12,15 +19,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
+  background: #f3f3f3;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.reph-gradient {
+  background: linear-gradient(135deg, #fbc5d0 0%, #fef5e0 55%, #f5ee9a 100%);
 }
