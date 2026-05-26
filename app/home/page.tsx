@@ -21,10 +21,26 @@ export default function HomePage() {
     <div className="min-h-full flex flex-col bg-[#f2f2f2]">
       {/* Top gradient section */}
       <div className="reph-gradient relative px-6 pt-14 pb-16">
-        {/* N avatar */}
-        <div className="absolute top-12 right-6 w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center">
-          <span className="text-sm font-semibold text-indigo-400">N</span>
-        </div>
+        {/* Settings button */}
+		<button
+		onClick={() => router.push("/settings")}
+		className="absolute top-12 right-6 w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600"
+		aria-label="Open settings"
+		>
+	 	  <svg
+			width="21"
+			height="21"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		  >
+			<circle cx="12" cy="12" r="3" />
+			<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.4 1v.2a2 2 0 1 1-4 0V21a1.65 1.65 0 0 0-.4-1 1.65 1.65 0 0 0-1-.6 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1-.4h-.2a2 2 0 1 1 0-4H3a1.65 1.65 0 0 0 1-.4 1.65 1.65 0 0 0 .6-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .4-1v-.2a2 2 0 1 1 4 0V3a1.65 1.65 0 0 0 .4 1 1.65 1.65 0 0 0 1 .6 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.4.2.7.5 1 .6.3.2.6.2 1 .2h.2a2 2 0 1 1 0 4h-.2c-.4 0-.7.1-1 .2-.3.1-.6.4-1 .6z" />
+		  </svg>
+		</button>
 
         <h1 className="text-[38px] font-bold text-gray-900 leading-tight">
           Edit by
