@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 
-const BASE_PHOTO = "https://picsum.photos/seed/reph2/400/250";
 
 const OPTIONS = [
   {
@@ -27,6 +26,20 @@ const OPTIONS = [
 export default function ResultsPage() {
   const router = useRouter();
   const [selected, setSelected] = useState<string>("A");
+  const [basePhoto, setBasePhoto] = useState<string>("");
+
+useEffect(() => {
+  const savedPhoto = localStorage.getItem("selectedMoodPhoto");
+
+  if (savedPhoto) {
+    const parsedPhoto = JSON.parse(savedPhoto);
+    setBasePhoto(parsedPhoto.src);
+  }
+}, []);
+
+if (!basePhoto) {
+  return null;
+}
 
   return (
     <div className="min-h-full flex flex-col bg-[#f2f2f2]">
@@ -40,7 +53,7 @@ export default function ResultsPage() {
           </p>
           <div className="relative rounded-2xl overflow-hidden">
             <img
-              src={BASE_PHOTO}
+              src={basePhoto}
               alt="original"
               className="w-full h-44 object-cover"
             />
@@ -65,7 +78,7 @@ export default function ResultsPage() {
                 className="relative rounded-2xl overflow-hidden w-full text-left"
               >
                 <img
-                  src={BASE_PHOTO}
+                  src={basePhoto}
                   alt={opt.label}
                   className="w-full h-44 object-cover"
                   style={{ filter: opt.filter }}

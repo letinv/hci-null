@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 
@@ -20,6 +20,17 @@ export default function AdjustmentPage() {
   const [selectedChip, setSelectedChip] = useState<string | null>(null);
   const [presetSaved, setPresetSaved] = useState(false);
 
+  const [basePhoto, setBasePhoto] = useState("");
+
+useEffect(() => {
+  const savedPhoto = localStorage.getItem("selectedMoodPhoto");
+
+  if (savedPhoto) {
+    const parsedPhoto = JSON.parse(savedPhoto);
+    setBasePhoto(parsedPhoto.src);
+  }
+}, []);
+
   const handleChip = (chip: typeof CHIPS[number]) => {
     setSelectedChip(chip.label);
     setWarmth(Math.min(100, Math.max(0, BASE.warmth + chip.delta.warmth)));
@@ -33,6 +44,10 @@ export default function AdjustmentPage() {
     { label: "softness",  value: softness,  setter: setSoftness },
   ];
 
+  if (!basePhoto) {
+  return null;
+}
+
   return (
     <div className="min-h-full flex flex-col bg-[#f2f2f2]">
       <Header title="adjustment" />
@@ -41,7 +56,7 @@ export default function AdjustmentPage() {
         {/* Photo */}
         <div className="relative rounded-2xl overflow-hidden">
           <img
-            src="https://picsum.photos/seed/reph2/400/250"
+            src={basePhoto}
             alt="adjusted"
             className="w-full h-44 object-cover"
             style={{ filter: "brightness(1.05) contrast(1.15) saturate(0.85)" }}
