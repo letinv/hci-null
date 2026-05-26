@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,7 @@ export default function AdjustmentPage() {
   const [intensity, setIntensity] = useState(50);
   const [softness, setSoftness] = useState(50);
   const [selectedChip, setSelectedChip] = useState<string | null>(null);
+  const [presetSaved, setPresetSaved] = useState(false);
 
   const handleChip = (chip: typeof CHIPS[number]) => {
     setSelectedChip(chip.label);
@@ -97,9 +98,12 @@ export default function AdjustmentPage() {
           <p className="text-gray-400 text-[10px] font-semibold tracking-widest mb-3">
             SAVE TO LIBRARY
           </p>
-          <button className="w-full py-4 rounded-full border border-gray-200 bg-white text-gray-700 font-medium text-sm">
-            Save this mood preset
-          </button>
+           <button
+             onClick={() => setPresetSaved(true)}
+             className="w-full py-4 rounded-full border border-gray-200 bg-white text-gray-700 font-medium text-sm"
+           >
+             {presetSaved ? "Preset saved ✓" : "Save this mood preset"}
+           </button>
         </div>
 
         {/* Save / Export */}

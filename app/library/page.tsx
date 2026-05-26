@@ -33,7 +33,7 @@ function LibraryContent() {
 
   return (
     <div className="min-h-full flex flex-col bg-[#f2f2f2]">
-      <Header title="library & settings" />
+      <Header title="library" />
 
       <div className="px-4 flex flex-col gap-5">
         <div>
@@ -64,7 +64,7 @@ function LibraryContent() {
           </div>
         </div>
 
-        <div>
+        <div className="hidden">
           <p className="text-gray-400 text-[10px] font-semibold tracking-widest mb-3 px-1">
             ACCOUNT & SETTINGS
           </p>

@@ -16,7 +16,7 @@ export default function PersonalStylePage() {
       <Header title="personal style suggestion" />
 
       <p className="px-5 pt-1 pb-4 text-gray-500 text-sm leading-relaxed">
-        Based on past edits, Moodtune suggests
+        Based on past edits, Reph suggests
         <br />
         a style that matches your taste.
       </p>
