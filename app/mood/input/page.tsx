@@ -20,13 +20,25 @@ function MoodInputContent() {
   const hasInput = moodText.trim() !== "" || hasRefImage || libraryMood !== null;
 
   const handleGenerate = () => {
-    if (!hasInput) {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 3000);
-      return;
-    }
-    router.push("/mood/generating");
+  if (!hasInput) {
+    setShowError(true);
+    setTimeout(() => setShowError(false), 3000);
+    return;
+  }
+
+  const selectedPhoto = localStorage.getItem("selectedMoodPhoto");
+
+  const moodData = {
+    moodText: moodText.trim(),
+    hasRefImage,
+    libraryMood,
+    selectedPhoto: selectedPhoto ? JSON.parse(selectedPhoto) : null,
   };
+
+  localStorage.setItem("moodEditRequest", JSON.stringify(moodData));
+
+  router.push("/mood/generating");
+};
 
   const clearError = () => { if (showError) setShowError(false); };
 

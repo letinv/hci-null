@@ -8,17 +8,49 @@ export default function GeneratingPage() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setProgress(40), 400);
-    const t2 = setTimeout(() => setProgress(80), 1400);
-    const t3 = setTimeout(() => setProgress(100), 2400);
-    const t4 = setTimeout(() => router.replace("/mood/results"), 3000);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
-    };
-  }, []);
+  const generateMoodEdit = async () => {
+    try {
+      setProgress(30);
+
+      const savedRequest = localStorage.getItem("moodEditRequest");
+
+      if (!savedRequest) return;
+
+      const parsedRequest = JSON.parse(savedRequest);
+
+      setProgress(60);
+
+      const response = await fetch("http://127.0.0.1:8000/mood-edit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mood: parsedRequest.moodText,
+          image_name: parsedRequest.selectedPhoto?.src || "unknown.jpg",
+        }),
+      });
+
+      const data = await response.json();
+
+      localStorage.setItem(
+        "moodEditResponse",
+        JSON.stringify(data)
+      );
+
+      setProgress(100);
+
+      setTimeout(() => {
+        router.replace("/mood/results");
+      }, 700);
+
+    } catch (error) {
+      console.error("backend error:", error);
+    }
+  };
+
+  generateMoodEdit();
+}, []);
 
   return (
     <div className="min-h-full flex flex-col">

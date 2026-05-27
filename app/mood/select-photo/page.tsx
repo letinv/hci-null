@@ -6,7 +6,7 @@ import Header from "../../components/Header";
 
 const PHOTOS = Array.from({ length: 12 }, (_, i) => ({
   id: i,
-  src: `https://picsum.photos/seed/reph${i + 1}/200/200`,
+  src: `https://picsum.photos/seed/reph${i + 1}/800/800`,
 }));
 
 export default function SelectPhotoPage() {
@@ -70,7 +70,19 @@ export default function SelectPhotoPage() {
           {selected !== null ? "Selected 1 photo" : "No photo selected"}
         </p>
         <button
-          onClick={() => selected !== null && router.push("/mood/input")}
+          onClick={() => {
+              if (selected !== null) {
+                  const photo = PHOTOS.find((p) => p.id === selected);
+                  if (photo) {
+                      localStorage.setItem(
+                          "selectedMoodPhoto",
+                          JSON.stringify(photo)
+                      );
+
+                      router.push("/mood/input");
+                  }
+              }
+          }}
           disabled={selected === null}
           className="w-full py-4 rounded-full text-gray-800 font-semibold text-sm disabled:opacity-40"
           style={{ background: "#f2c8d4" }}
