@@ -6,7 +6,7 @@ import Header from "../../components/Header";
 
 const PHOTOS = Array.from({ length: 12 }, (_, i) => ({
   id: i,
-  src: `https://picsum.photos/seed/reph${i + 1}/200/200`,
+  src: `https://picsum.photos/seed/reph${i + 1}/800/800`,
 }));
 
 export default function SelectPhotoPage() {

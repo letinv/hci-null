@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 
 
-const OPTIONS = [
+const DEFAULT_OPTIONS = [
   {
     id: "A",
     label: "Option A",
@@ -27,6 +27,7 @@ export default function ResultsPage() {
   const router = useRouter();
   const [selected, setSelected] = useState<string>("A");
   const [basePhoto, setBasePhoto] = useState<string>("");
+  const [options, setOptions] = useState(DEFAULT_OPTIONS);
 
 useEffect(() => {
   const savedPhoto = localStorage.getItem("selectedMoodPhoto");
@@ -34,6 +35,16 @@ useEffect(() => {
   if (savedPhoto) {
     const parsedPhoto = JSON.parse(savedPhoto);
     setBasePhoto(parsedPhoto.src);
+
+    const savedResponse = localStorage.getItem("moodEditResponse");
+
+if (savedResponse) {
+  const parsedResponse = JSON.parse(savedResponse);
+
+  if (parsedResponse.generatedResults) {
+    setOptions(parsedResponse.generatedResults);
+  }
+}
   }
 }, []);
 
@@ -71,7 +82,7 @@ if (!basePhoto) {
             EDITED OPTIONS
           </p>
           <div className="flex flex-col gap-3">
-            {OPTIONS.map((opt) => (
+            {options.map((opt) => (
               <button
                 key={opt.id}
                 onClick={() => setSelected(opt.id)}
