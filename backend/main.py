@@ -255,6 +255,38 @@ def get_library():
         "presets": load_presets()
     }
 
+@app.delete("/delete-preset/{preset_id}")
+def delete_preset(preset_id: int):
+    presets = load_presets()
+
+    updated_presets = [
+        preset for preset in presets
+        if preset["id"] != preset_id
+    ]
+
+    with open(PRESETS_FILE, "w", encoding="utf-8") as f:
+        json.dump(updated_presets, f, ensure_ascii=False, indent=2)
+
+    return {
+        "status": "deleted",
+        "deletedPresetId": preset_id
+    }
+
+
+@app.get("/gallery")
+def get_gallery():
+    gallery_images = [
+        {
+            "id": i,
+            "src": f"https://picsum.photos/seed/reph{i}/800/800"
+        }
+        for i in range(1, 13)
+    ]
+
+    return {
+        "images": gallery_images
+    }
+
 
 # =========================
 # TASK 2 — CONSISTENCY EDIT
