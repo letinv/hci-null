@@ -190,7 +190,7 @@ export default function AdjustmentPage() {
                 setPresetSaving(true);
                 setPresetError(false);
                 try {
-                  await fetch("http://127.0.0.1:8000/save-preset", {
+                  await fetch("https://hci-null-production.up.railway.app/save-preset", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({

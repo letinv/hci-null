@@ -20,7 +20,7 @@ export default function HomePage() {
   const [recentImages, setRecentImages] = useState<GalleryImage[]>([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/library")
+    fetch("https://hci-null-production.up.railway.app/library")
       .then((res) => res.json())
       .then((data) => {
         const presets: Preset[] = data.presets ?? [];
@@ -28,7 +28,7 @@ export default function HomePage() {
       })
       .catch(() => setRecentMoods([]));
 
-    fetch("http://127.0.0.1:8000/gallery")
+    fetch("https://hci-null-production.up.railway.app/gallery")
       .then((res) => res.json())
       .then((data) => setRecentImages((data.images ?? []).slice(0, 4)))
       .catch(() => setRecentImages([]));
