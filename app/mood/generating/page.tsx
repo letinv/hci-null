@@ -20,7 +20,7 @@ export default function GeneratingPage() {
 
       setProgress(60);
 
-      const response = await fetch("http://127.0.0.1:8000/mood-edit", {
+      const response = await fetch("https://hci-null-production.up.railway.app/mood-edit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -27,7 +27,7 @@ function LibraryContent() {
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/library")
+    fetch("https://hci-null-production.up.railway.app/library")
       .then((res) => res.json())
       .then((data) => setPresets((data.presets ?? []).slice().reverse()))
       .catch(() => setPresets([]))
@@ -52,7 +52,7 @@ function LibraryContent() {
   const handleDelete = async () => {
     await Promise.all(
       checkedIds.map((id) =>
-        fetch(`http://127.0.0.1:8000/delete-preset/${id}`, { method: "DELETE" }).catch(() => {})
+        fetch(`https://hci-null-production.up.railway.app/delete-preset/${id}`, { method: "DELETE" }).catch(() => {})
       )
     );
     setPresets((prev) => prev.filter((p) => !checkedIds.includes(p.id)));
