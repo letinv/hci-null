@@ -18,7 +18,7 @@ export default function GalleryPicker({ onSelect, onClose }: GalleryPickerProps)
     // 마운트 후 슬라이드 업 애니메이션
     requestAnimationFrame(() => setVisible(true));
 
-    fetch("http://127.0.0.1:8000/gallery")
+    fetch("https://hci-null-production.up.railway.app/gallery")
       .then((res) => res.json())
       .then((data) => setPhotos(data.images ?? []))
       .catch(() => setPhotos([]));

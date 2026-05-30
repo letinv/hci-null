@@ -13,7 +13,7 @@ export default function ConsistencySelectPage() {
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/gallery")
+    fetch("https://hci-null-production.up.railway.app/gallery")
       .then((res) => res.json())
       .then((data) => setPhotos(data.images ?? []))
       .catch(() => setPhotos([]));

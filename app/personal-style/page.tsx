@@ -46,7 +46,7 @@ export default function PersonalStylePage() {
       const photo = JSON.parse(savedPhoto);
       setBasePhoto(photo.src);
 
-      fetch("http://127.0.0.1:8000/personal-style", {
+      fetch("https://hci-null-production.up.railway.app/personal-style", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image_name: photo.src }),
