@@ -8,9 +8,7 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-full flex flex-col">
       <div className="reph-gradient relative px-6 pt-14 pb-20">
-        <div className="absolute top-12 right-6 w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center">
-          <span className="text-sm font-semibold text-indigo-400">N</span>
-        </div>
+
         <h1 className="text-[38px] font-bold text-gray-900 leading-tight">
           Exploring
           <br />

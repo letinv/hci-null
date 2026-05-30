@@ -1,18 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 
-const PHOTOS = Array.from({ length: 12 }, (_, i) => ({
-  id: i,
-  src: `https://picsum.photos/seed/batch${i + 1}/200/200`,
-}));
+type GalleryImage = { id: number; src: string };
 
 export default function ConsistencySelectPage() {
   const router = useRouter();
+  const [photos, setPhotos] = useState<GalleryImage[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
   const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/gallery")
+      .then((res) => res.json())
+      .then((data) => setPhotos(data.images ?? []))
+      .catch(() => setPhotos([]));
+  }, []);
 
   const toggle = (id: number) => {
     setSelected((prev) =>
@@ -27,6 +32,8 @@ export default function ConsistencySelectPage() {
       setTimeout(() => setShowError(false), 3000);
       return;
     }
+    const selectedPhotos = selected.map((id) => photos.find((p) => p.id === id)!);
+    localStorage.setItem("consistencySelectedPhotos", JSON.stringify(selectedPhotos));
     router.push("/consistency/style");
   };
 
@@ -50,7 +57,7 @@ export default function ConsistencySelectPage() {
         <p className="text-gray-400 text-xs mb-3">Tap to select multiple images</p>
 
         <div className="grid grid-cols-3 gap-1.5">
-          {PHOTOS.map((photo) => {
+          {photos.map((photo) => {
             const order = selected.indexOf(photo.id);
             const isSelected = order !== -1;
             return (

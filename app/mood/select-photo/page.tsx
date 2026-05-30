@@ -1,17 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../../components/Header";
 
-const PHOTOS = Array.from({ length: 12 }, (_, i) => ({
-  id: i,
-  src: `https://picsum.photos/seed/reph${i + 1}/800/800`,
-}));
+type GalleryImage = { id: number; src: string };
 
-export default function SelectPhotoPage() {
+function SelectPhotoContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+  const [photos, setPhotos] = useState<GalleryImage[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/gallery")
+      .then((res) => res.json())
+      .then((data) => setPhotos(data.images ?? []))
+      .catch(() => setPhotos([]));
+  }, []);
+
+  const handleNext = () => {
+    if (selected !== null) {
+      const photo = photos.find((p) => p.id === selected);
+      if (photo) {
+        localStorage.setItem("selectedMoodPhoto", JSON.stringify(photo));
+        if (from === "personal-style") {
+          router.push("/personal-style");
+        } else {
+          router.push("/mood/input");
+        }
+      }
+    }
+  };
 
   return (
     <div className="min-h-full flex flex-col bg-[#f2f2f2]">
@@ -26,13 +47,13 @@ export default function SelectPhotoPage() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="font-bold text-gray-900 text-base">Recents</p>
-            <p className="text-gray-400 text-xs">1,248 items</p>
+            <p className="text-gray-400 text-xs">{photos.length} items</p>
           </div>
           <button className="text-blue-500 text-sm font-medium">All Photos</button>
         </div>
 
         <div className="grid grid-cols-3 gap-1.5">
-          {PHOTOS.map((photo) => (
+          {photos.map((photo) => (
             <button
               key={photo.id}
               onClick={() => setSelected(photo.id)}
@@ -70,19 +91,7 @@ export default function SelectPhotoPage() {
           {selected !== null ? "Selected 1 photo" : "No photo selected"}
         </p>
         <button
-          onClick={() => {
-              if (selected !== null) {
-                  const photo = PHOTOS.find((p) => p.id === selected);
-                  if (photo) {
-                      localStorage.setItem(
-                          "selectedMoodPhoto",
-                          JSON.stringify(photo)
-                      );
-
-                      router.push("/mood/input");
-                  }
-              }
-          }}
+          onClick={handleNext}
           disabled={selected === null}
           className="w-full py-4 rounded-full text-gray-800 font-semibold text-sm disabled:opacity-40"
           style={{ background: "#f2c8d4" }}
@@ -91,5 +100,13 @@ export default function SelectPhotoPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function SelectPhotoPage() {
+  return (
+    <Suspense>
+      <SelectPhotoContent />
+    </Suspense>
   );
 }

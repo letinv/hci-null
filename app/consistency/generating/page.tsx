@@ -8,16 +8,40 @@ export default function ConsistencyGeneratingPage() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setProgress(40), 400);
-    const t2 = setTimeout(() => setProgress(80), 1400);
-    const t3 = setTimeout(() => setProgress(100), 2400);
-    const t4 = setTimeout(() => router.replace("/consistency/preview"), 3000);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
+    const generate = async () => {
+      try {
+        setProgress(30);
+
+        const savedPhotos = localStorage.getItem("consistencySelectedPhotos");
+        const savedStyle = localStorage.getItem("consistencyStyleRequest");
+
+        if (!savedPhotos || !savedStyle) return;
+
+        const photos = JSON.parse(savedPhotos) as { id: number; src: string }[];
+        const { preset } = JSON.parse(savedStyle) as { preset: string };
+
+        setProgress(60);
+
+        const response = await fetch("http://127.0.0.1:8000/consistency-edit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            images: photos.map((p) => p.src),
+            preset,
+          }),
+        });
+
+        const data = await response.json();
+        localStorage.setItem("consistencyEditResponse", JSON.stringify(data));
+
+        setProgress(100);
+        setTimeout(() => router.replace("/consistency/preview"), 700);
+      } catch (error) {
+        console.error("backend error:", error);
+      }
     };
+
+    generate();
   }, []);
 
   return (

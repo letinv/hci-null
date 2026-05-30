@@ -3,21 +3,41 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../../components/Header";
+import GalleryPicker from "../../components/GalleryPicker";
+
+type InputMode = "text" | "image" | "library" | null;
 
 function ConsistencyStyleContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [mode, setMode] = useState<InputMode>(null);
   const [styleText, setStyleText] = useState("");
-  const [hasRefImage, setHasRefImage] = useState(false);
+  const [refImage, setRefImage] = useState<{ id: number; src: string } | null>(null);
   const [libraryMood, setLibraryMood] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
 
   useEffect(() => {
     const mood = searchParams.get("mood");
-    if (mood) setLibraryMood(mood);
+    if (mood) {
+      setLibraryMood(mood);
+      setMode("library");
+      setStyleText("");
+      setRefImage(null);
+    }
   }, [searchParams]);
 
-  const isValid = styleText.trim().length > 0 || hasRefImage || libraryMood !== null;
+  const isValid = styleText.trim().length > 0 || refImage !== null || libraryMood !== null;
+
+  const handleModeSelect = (selected: InputMode) => {
+    setMode(selected);
+    setStyleText("");
+    setRefImage(null);
+    setLibraryMood(null);
+    setShowError(false);
+    if (selected === "image") setShowGallery(true);
+    if (selected === "library") router.push("/library?from=consistency-style");
+  };
 
   const handleApply = () => {
     if (!isValid) {
@@ -25,66 +45,91 @@ function ConsistencyStyleContent() {
       setTimeout(() => setShowError(false), 3000);
       return;
     }
+    const preset = libraryMood ?? styleText.trim();
+    localStorage.setItem("consistencyStyleRequest", JSON.stringify({ preset }));
     router.push("/consistency/generating");
   };
 
-  const clearError = () => { if (showError) setShowError(false); };
+  const MODES = [
+    { key: "text",    label: "Text" },
+    { key: "image",   label: "Reference Image" },
+    { key: "library", label: "Library" },
+  ] as const;
 
   return (
     <div className="min-h-full flex flex-col bg-[#f2f2f2]">
       <Header title="style selection" />
 
       <p className="px-5 pt-1 pb-4 text-gray-500 text-sm">
-        Describe the style for this photo set or upload a reference image.
+        Choose how you want to describe the style for this photo set.
       </p>
 
-      <div className="px-4 flex flex-col gap-3 flex-1">
-        {/* Text input card */}
-        <div className={"bg-white rounded-2xl p-4 transition-all duration-200" + (showError && !styleText.trim() ? " ring-2 ring-red-300" : "")}>
-          <p className="font-bold text-gray-900 text-sm mb-2">Text input</p>
-          <input
-            type="text"
-            value={styleText}
-            onChange={(e) => { setStyleText(e.target.value); clearError(); }}
-            placeholder="e.g. cohesive pastel feed, soft blue mood..."
-            className="w-full text-sm text-gray-500 outline-none placeholder:text-gray-400"
-          />
+      <div className="px-4 flex flex-col gap-4 flex-1">
+        {/* 3 mode buttons */}
+        <div className="flex gap-2">
+          {MODES.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => handleModeSelect(key)}
+              className={"flex-1 py-3 rounded-2xl text-xs font-semibold border transition-all duration-150 " + (mode === key
+                ? "bg-white border-blue-400 text-blue-600 shadow-sm"
+                : "bg-white border-gray-200 text-gray-500")}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
-        {/* Reference image */}
-        <div>
-          <p className="font-bold text-gray-900 text-sm mb-2">Reference image</p>
-          <div className={"relative rounded-2xl overflow-hidden h-48 transition-all duration-200" + (showError && !hasRefImage ? " ring-2 ring-red-300" : "")}>
-            {hasRefImage ? (
-              <img src="https://picsum.photos/seed/batch5/400/300" alt="reference" className="w-full h-full object-cover" />
+        {/* Content area */}
+        {mode === "text" && (
+          <div className="bg-white rounded-2xl p-4">
+            <input
+              type="text"
+              value={styleText}
+              onChange={(e) => { setStyleText(e.target.value); setShowError(false); }}
+              placeholder="e.g. cohesive pastel feed, soft blue mood..."
+              className="w-full text-sm text-gray-600 outline-none placeholder:text-gray-300"
+              autoFocus
+            />
+          </div>
+        )}
+
+        {mode === "image" && (
+          <div className="relative rounded-2xl overflow-hidden h-48">
+            {refImage ? (
+              <>
+                <img src={refImage.src} alt="reference" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <button
+                    onClick={() => setShowGallery(true)}
+                    className="bg-white/90 rounded-full px-5 py-2 text-sm font-semibold text-gray-800 shadow"
+                  >
+                    Change image
+                  </button>
+                </div>
+              </>
             ) : (
-              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+              <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
                 <span className="text-gray-300 text-sm">No image selected</span>
               </div>
             )}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button
-                onClick={() => { setHasRefImage(true); clearError(); }}
-                className="bg-white/90 rounded-full px-5 py-2 text-sm font-semibold text-gray-800 shadow"
-              >
-                {hasRefImage ? "Change image" : "+ Upload image"}
-              </button>
-            </div>
           </div>
-        </div>
+        )}
 
-        {/* Open Library */}
-        <button
-          onClick={() => router.push("/library?from=consistency-style")}
-          className={"rounded-2xl p-4 text-center shadow-sm w-full transition-all duration-200" + (libraryMood ? " bg-[#f2c8d4]/30 ring-2 ring-[#f2c8d4]" : showError ? " bg-white ring-2 ring-red-300" : " bg-white")}
-        >
-          <p className="font-bold text-gray-900 text-sm">Open Library</p>
-          {libraryMood ? (
-            <p className="text-[#d4829a] text-xs font-semibold mt-1">{libraryMood}</p>
-          ) : (
-            <p className="text-gray-400 text-xs mt-0.5">Use saved moods and previous preferences</p>
-          )}
-        </button>
+        {mode === "library" && libraryMood && (
+          <div className="bg-white rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">Selected mood</p>
+              <p className="text-gray-900 font-semibold text-sm">{libraryMood}</p>
+            </div>
+            <button
+              onClick={() => router.push("/library?from=consistency-style")}
+              className="text-blue-500 text-xs font-medium"
+            >
+              Change
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="px-4 py-4 flex flex-col gap-2">
@@ -95,7 +140,7 @@ function ConsistencyStyleContent() {
             <circle cx="8" cy="11" r="0.75" fill="#ef4444" />
           </svg>
           <p className="text-red-500 text-xs font-medium">
-            Please enter a style description or upload a reference image.
+            Please select an input method and provide your style.
           </p>
         </div>
 
@@ -107,6 +152,13 @@ function ConsistencyStyleContent() {
           Apply consistent style
         </button>
       </div>
+
+      {showGallery && (
+        <GalleryPicker
+          onSelect={(photo) => { setRefImage(photo); setShowGallery(false); }}
+          onClose={() => { setShowGallery(false); if (!refImage) setMode(null); }}
+        />
+      )}
     </div>
   );
 }
