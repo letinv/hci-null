@@ -26,7 +26,7 @@ export default function GeneratingPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          mood: parsedRequest.moodText,
+          mood: parsedRequest.moodText || parsedRequest.presetMood,
           image_name: parsedRequest.selectedPhoto?.src || "unknown.jpg",
         }),
       });

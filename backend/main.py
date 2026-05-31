@@ -27,7 +27,11 @@ class MoodEditRequest(BaseModel):
 def mood_edit(data: MoodEditRequest):
     mood = data.mood.lower().strip()
 
-    if "warm" in mood or "evening" in mood or "sunset" in mood:
+    if any(word in mood for word in [
+        "warm", "evening", "sunset", "golden", "cozy", "autumn", "orange",
+        "amber", "honey", "glow", "glowy", "sunny", "summer", "late afternoon",
+        "soft sun", "golden hour", "warm light", "cafe", "comfort", "nostalgic"
+    ]):
         style_name = "warm evening"
         style_description = "A warm, soft-toned edit for a cozy evening atmosphere."
         options = [
@@ -54,7 +58,12 @@ def mood_edit(data: MoodEditRequest):
             }
         ]
 
-    elif "clean" in mood or "bright" in mood or "fresh" in mood or "daylight" in mood:
+
+    elif any(word in mood for word in [
+        "clean", "bright", "fresh", "daylight", "morning", "minimal", "clear",
+        "airy", "natural light", "white", "simple", "crisp", "refreshing",
+        "light", "pure", "soft daylight", "open", "calm morning"
+    ]):
         style_name = "clean daylight"
         style_description = "A bright and natural edit with a fresh, clean look."
         options = [
@@ -81,7 +90,11 @@ def mood_edit(data: MoodEditRequest):
             }
         ]
 
-    elif "cinematic" in mood or "film" in mood or "moody" in mood:
+
+    elif any(word in mood for word in [
+        "cinematic", "film", "moody", "movie", "dramatic", "editorial", "muted",
+        "contrast", "deep", "intense", "urban", "street", "cool movie"
+    ]):
         style_name = "cinematic film"
         style_description = "A more dramatic edit inspired by film-like color grading."
         options = [
@@ -108,7 +121,12 @@ def mood_edit(data: MoodEditRequest):
             }
         ]
 
-    elif "soft" in mood or "pastel" in mood or "dreamy" in mood:
+
+    elif any(word in mood for word in [
+        "soft", "pastel", "dreamy", "gentle", "calm", "romantic", "creamy",
+        "delicate", "cute", "sweet", "light pink", "blurred", "smooth",
+        "fairy", "ethereal", "peaceful", "soft girl", "tender", "low contrast"
+    ]):
         style_name = "soft pastel"
         style_description = "A gentle edit with low contrast and soft color tones."
         options = [
@@ -132,6 +150,103 @@ def mood_edit(data: MoodEditRequest):
                 "filter": "brightness(1.12) contrast(0.92) saturate(0.95)",
                 "tags": ["natural", "soft", "balanced"],
                 "explanation": "Keeps the photo natural while softening the overall look."
+            }
+        ]
+
+    elif any(word in mood for word in [
+        "cool", "blue", "cold", "winter", "ocean", "rain", "rainy",
+        "sky", "icy", "calm blue", "deep blue", "night blue",
+        "silver", "fog", "mist", "cool tones"
+    ]):
+        style_name = "cool blue"
+        style_description = "A cool-toned edit with calm blue and silver highlights."
+
+        options = [
+            {
+                "id": "A",
+                "label": "cool minimal",
+                "filter": "brightness(1.05) contrast(1.08) saturate(0.88) hue-rotate(8deg)",
+                "tags": ["cool", "minimal", "clean"],
+                "explanation": "Creates a calm and minimal cool-toned atmosphere."
+            },
+            {
+                "id": "B",
+                "label": "rainy blue",
+                "filter": "brightness(0.96) contrast(1.15) saturate(0.82) hue-rotate(12deg)",
+                "tags": ["blue", "rainy", "moody"],
+                "explanation": "Adds deeper blue shadows inspired by rainy city lighting."
+            },
+            {
+                "id": "C",
+                "label": "silver fade",
+                "filter": "brightness(1.08) contrast(0.92) saturate(0.75)",
+                "tags": ["silver", "faded", "soft"],
+                "explanation": "Softens colors into a cooler silver-toned aesthetic."
+            }
+        ]
+
+    elif any(word in mood for word in [
+        "vintage", "retro", "old film", "analog", "nostalgia",
+        "90s", "film camera", "grain", "classic", "faded memory",
+        "old photo", "vhs", "vintage summer"
+    ]):
+        style_name = "vintage film"
+        style_description = "A nostalgic edit inspired by old film photography."
+
+        options = [
+            {
+                "id": "A",
+                "label": "film memory",
+                "filter": "brightness(1.02) contrast(0.94) saturate(0.88) sepia(0.18)",
+                "tags": ["film", "nostalgic", "warm"],
+                "explanation": "Creates a soft nostalgic atmosphere inspired by film cameras."
+            },
+            {
+                "id": "B",
+                "label": "retro faded",
+                "filter": "brightness(1.08) contrast(0.85) saturate(0.78) sepia(0.22)",
+                "tags": ["retro", "faded", "soft"],
+                "explanation": "Adds faded tones and softer contrast for a retro look."
+            },
+            {
+                "id": "C",
+                "label": "classic analog",
+                "filter": "brightness(0.98) contrast(1.12) saturate(0.82) sepia(0.12)",
+                "tags": ["analog", "classic", "film"],
+                "explanation": "Balances muted colors and contrast to simulate analog photography."
+            }
+        ]
+
+
+    elif any(word in mood for word in [
+        "dark", "noir", "black", "midnight", "shadow", "mysterious",
+        "deep shadows", "dark cinematic", "night city", "intense",
+        "dramatic night", "low exposure"
+    ]):
+        style_name = "dark noir"
+        style_description = "A dark cinematic edit with strong shadows and dramatic contrast."
+
+        options = [
+            {
+                "id": "A",
+                "label": "midnight noir",
+                "filter": "brightness(0.82) contrast(1.35) saturate(0.72)",
+                "tags": ["dark", "night", "cinematic"],
+                "explanation": "Creates a deep cinematic night atmosphere with stronger shadows."
+            },
+            {
+                "id": "B",
+                "label": "urban shadow",
+                "filter": "brightness(0.88) contrast(1.28) saturate(0.76)",
+                "tags": ["urban", "shadow", "moody"],
+                "explanation": "Enhances darker areas while keeping an urban editorial mood."
+            },
+            {
+                "id": "C",
+                "label": "dramatic fade",
+                "filter": "brightness(0.92) contrast(1.18) saturate(0.68)",
+                "tags": ["dramatic", "faded", "deep"],
+                "explanation": "Softens the image slightly while maintaining dramatic contrast."
             }
         ]
 
@@ -276,11 +391,20 @@ def delete_preset(preset_id: int):
 @app.get("/gallery")
 def get_gallery():
     gallery_images = [
-        {
-            "id": i,
-            "src": f"https://picsum.photos/seed/reph{i}/800/800"
-        }
-        for i in range(1, 13)
+        {"id": 1, "src": "https://picsum.photos/seed/cafe-set-1/800/800", "category": "cafe"},
+        {"id": 2, "src": "https://picsum.photos/seed/cafe-set-2/800/800", "category": "cafe"},
+        {"id": 3, "src": "https://picsum.photos/seed/cafe-set-3/800/800", "category": "cafe"},
+        {"id": 4, "src": "https://picsum.photos/seed/cafe-set-4/800/800", "category": "cafe"},
+
+        {"id": 5, "src": "https://picsum.photos/seed/street-set-1/800/800", "category": "street"},
+        {"id": 6, "src": "https://picsum.photos/seed/street-set-2/800/800", "category": "street"},
+        {"id": 7, "src": "https://picsum.photos/seed/street-set-3/800/800", "category": "street"},
+        {"id": 8, "src": "https://picsum.photos/seed/street-set-4/800/800", "category": "street"},
+
+        {"id": 9, "src": "https://picsum.photos/seed/travel-set-1/800/800", "category": "travel"},
+        {"id": 10, "src": "https://picsum.photos/seed/travel-set-2/800/800", "category": "travel"},
+        {"id": 11, "src": "https://picsum.photos/seed/travel-set-3/800/800", "category": "travel"},
+        {"id": 12, "src": "https://picsum.photos/seed/travel-set-4/800/800", "category": "travel"},
     ]
 
     return {
@@ -300,17 +424,23 @@ class ConsistencyRequest(BaseModel):
 def consistency_edit(data: ConsistencyRequest):
     preset = data.preset.lower().strip()
 
-    if "warm" in preset or "cinematic" in preset:
+    if any(word in preset for word in ["warm", "evening", "sunset", "golden", "cozy", "cinematic"]):
         base_filter = "brightness(1.12) contrast(1.18) saturate(1.22) sepia(0.12)"
         style_name = "warm cinematic consistency"
 
-    elif "clean" in preset or "bright" in preset:
+
+    elif any(word in preset for word in ["clean", "bright", "fresh", "daylight", "morning", "minimal", "clear"]):
         base_filter = "brightness(1.22) contrast(1.05) saturate(1.02)"
         style_name = "clean daylight consistency"
 
-    elif "moody" in preset or "film" in preset:
+
+    elif any(word in preset for word in ["moody", "film", "cinematic", "dark", "noir", "shadow", "dramatic", "vintage", "retro"]):
         base_filter = "brightness(0.92) contrast(1.3) saturate(0.82)"
         style_name = "moody film consistency"
+
+    elif any(word in preset for word in ["cool", "blue", "cold", "rainy", "winter", "silver"]):
+        base_filter = "brightness(1.02) contrast(1.12) saturate(0.82) hue-rotate(10deg)"
+        style_name = "cool blue consistency"
 
     else:
         base_filter = "brightness(1.05) contrast(1.08) saturate(1.05)"
@@ -318,22 +448,49 @@ def consistency_edit(data: ConsistencyRequest):
 
     edited_images = []
 
+
+
+    adjustment_profiles = [
+        {
+            "brightness": 1.10,
+            "contrast": 1.04,
+            "saturate": 1.02,
+            "reason": "Brightened slightly to match the overall exposure of the set."
+        },
+        {
+            "brightness": 0.96,
+            "contrast": 1.12,
+            "saturate": 0.96,
+            "reason": "Reduced brightness and increased contrast to balance stronger lighting."
+        },
+        {
+            "brightness": 1.04,
+            "contrast": 1.00,
+            "saturate": 1.08,
+            "reason": "Adjusted color intensity to better match the shared style."
+        },
+        {
+            "brightness": 1.08,
+            "contrast": 0.96,
+            "saturate": 1.00,
+            "reason": "Softened contrast to make the photo feel more consistent with the group."
+        }
+    ]
+
     for index, image in enumerate(data.images):
-        brightness_offset = 1 + (index * 0.03)
-        contrast_offset = 1 + (index * 0.02)
+        profile = adjustment_profiles[index % len(adjustment_profiles)]
 
         adjusted_filter = (
             f"{base_filter} "
-            f"brightness({brightness_offset:.2f}) "
-            f"contrast({contrast_offset:.2f})"
+            f"brightness({profile['brightness']:.2f}) "
+            f"contrast({profile['contrast']:.2f}) "
+            f"saturate({profile['saturate']:.2f})"
         )
 
         edited_images.append({
             "image": image,
             "filter": adjusted_filter,
-            "adjustmentReason": (
-                "Adjusted individually to match the lighting and tone of the full photo set."
-            )
+            "adjustmentReason": profile["reason"]
         })
 
     return {
