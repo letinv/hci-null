@@ -67,7 +67,7 @@ function LibraryContent() {
 
   return (
     <div className="min-h-full flex flex-col bg-[#f2f2f2]">
-      <Header title="library" />
+      <Header title="saved presets" />
 
       <div className="px-4 flex flex-col gap-5 flex-1">
         <div className="flex flex-col flex-1">

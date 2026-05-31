@@ -5,38 +5,38 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../../components/Header";
 import GalleryPicker from "../../components/GalleryPicker";
 
-type InputMode = "text" | "image" | "library" | null;
+type InputMode = "text" | "image" | "preset" | null;
 
 function ConsistencyStyleContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mode, setMode] = useState<InputMode>(null);
   const [styleText, setStyleText] = useState("");
-  const [refImage, setRefImage] = useState<{ id: number; src: string } | null>(null);
-  const [libraryMood, setLibraryMood] = useState<string | null>(null);
+   const [refImage, setRefImage] = useState<{ id: number; src: string } | null>(null);
+  const [presetMood, setPresetMood] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
 
   useEffect(() => {
     const mood = searchParams.get("mood");
     if (mood) {
-      setLibraryMood(mood);
-      setMode("library");
+      setPresetMood(mood);
+      setMode("preset");
       setStyleText("");
       setRefImage(null);
     }
   }, [searchParams]);
 
-  const isValid = styleText.trim().length > 0 || refImage !== null || libraryMood !== null;
+  const isValid = styleText.trim().length > 0 || refImage !== null || presetMood !== null;
 
   const handleModeSelect = (selected: InputMode) => {
     setMode(selected);
     setStyleText("");
     setRefImage(null);
-    setLibraryMood(null);
+    setPresetMood(null);
     setShowError(false);
     if (selected === "image") setShowGallery(true);
-    if (selected === "library") router.push("/library?from=consistency-style");
+    if (selected === "preset") router.push("/library?from=consistency-style");
   };
 
   const handleApply = () => {
@@ -45,7 +45,7 @@ function ConsistencyStyleContent() {
       setTimeout(() => setShowError(false), 3000);
       return;
     }
-    const preset = libraryMood ?? styleText.trim();
+    const preset = presetMood ?? styleText.trim();
     localStorage.setItem("consistencyStyleRequest", JSON.stringify({ preset }));
     router.push("/consistency/generating");
   };
@@ -53,7 +53,7 @@ function ConsistencyStyleContent() {
   const MODES = [
     { key: "text",    label: "Text" },
     { key: "image",   label: "Reference Image" },
-    { key: "library", label: "Library" },
+    { key: "preset", label: "Saved Presets" },
   ] as const;
 
   return (
@@ -116,11 +116,11 @@ function ConsistencyStyleContent() {
           </div>
         )}
 
-        {mode === "library" && libraryMood && (
+        {mode === "preset" && presetMood && (
           <div className="bg-white rounded-2xl p-4 flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 mb-0.5">Selected mood</p>
-              <p className="text-gray-900 font-semibold text-sm">{libraryMood}</p>
+              <p className="text-gray-900 font-semibold text-sm">{presetMood}</p>
             </div>
             <button
               onClick={() => router.push("/library?from=consistency-style")}
