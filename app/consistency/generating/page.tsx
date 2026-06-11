@@ -23,7 +23,7 @@ export default function ConsistencyGeneratingPage() {
 
         setProgress(60);
 
-        const response = await fetch("https://hci-null-production.up.railway.app/consistency-edit", {
+        const response = await fetch("/api/consistency-edit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
