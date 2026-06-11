@@ -34,12 +34,18 @@ function LibraryContent() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleMoodSelect = (moodName: string) => {
+  const handleMoodSelect = (preset: Preset) => {
     if (!isSelectable) return;
+    localStorage.setItem("selectedLibraryPreset", JSON.stringify({
+      mood: preset.mood,
+      filter: preset.filter,
+      styleName: preset.styleName,
+      tags: preset.tags,
+    }));
     if (isFromMoodInput) {
-      router.push("/mood/input?mood=" + encodeURIComponent(moodName));
+      router.push("/mood/input?mood=" + encodeURIComponent(preset.mood));
     } else if (isFromConsistency) {
-      router.push("/consistency/style?mood=" + encodeURIComponent(moodName));
+      router.push("/consistency/style?mood=" + encodeURIComponent(preset.mood));
     }
   };
 
@@ -99,7 +105,7 @@ function LibraryContent() {
                   key={preset.id}
                   onClick={() => {
                     if (editMode) toggleCheck(preset.id);
-                    else handleMoodSelect(preset.mood);
+                    else handleMoodSelect(preset);
                   }}
                   disabled={!isSelectable && !editMode}
                   className={"bg-white rounded-2xl px-4 py-3 flex items-center gap-4 shadow-sm w-full text-left transition-all duration-150" + ((isSelectable || editMode) ? " active:scale-[0.98] active:bg-gray-50" : "")}

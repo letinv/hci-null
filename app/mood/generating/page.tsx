@@ -30,7 +30,8 @@ export default function GeneratingPage() {
           image_name: parsedRequest.selectedPhoto?.src || "unknown.jpg",
           mode: parsedRequest.mode || "text",
           reference_image_url: parsedRequest.refImageSrc || null,
-          library_preset: parsedRequest.libraryMood || null,
+          library_preset: parsedRequest.presetMood || parsedRequest.libraryMood || null,
+          library_preset_filter: parsedRequest.libraryFilter || null,
         }),
       });
 

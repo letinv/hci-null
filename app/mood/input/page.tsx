@@ -17,6 +17,8 @@ function MoodInputContent() {
   const [showError, setShowError] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
 
+  const [libraryFilter, setLibraryFilter] = useState<string | null>(null);
+
   useEffect(() => {
     const mood = searchParams.get("mood");
     if (mood) {
@@ -24,6 +26,11 @@ function MoodInputContent() {
       setMode("preset");
       setMoodText("");
       setRefImage(null);
+      const saved = localStorage.getItem("selectedLibraryPreset");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.mood === mood) setLibraryFilter(parsed.filter ?? null);
+      }
     }
   }, [searchParams]);
 
@@ -52,6 +59,7 @@ function MoodInputContent() {
       refImageSrc: refImage?.src ?? null,
       hasRefImage: refImage !== null,
       presetMood,
+      libraryFilter: libraryFilter ?? null,
       selectedPhoto: selectedPhoto ? JSON.parse(selectedPhoto) : null,
     }));
     router.push("/mood/generating");

@@ -14,6 +14,7 @@ function ConsistencyStyleContent() {
   const [styleText, setStyleText] = useState("");
    const [refImage, setRefImage] = useState<{ id: number; src: string } | null>(null);
   const [presetMood, setPresetMood] = useState<string | null>(null);
+  const [libraryFilter, setLibraryFilter] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
 
@@ -24,6 +25,11 @@ function ConsistencyStyleContent() {
       setMode("preset");
       setStyleText("");
       setRefImage(null);
+      const saved = localStorage.getItem("selectedLibraryPreset");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.mood === mood) setLibraryFilter(parsed.filter ?? null);
+      }
     }
   }, [searchParams]);
 
@@ -51,6 +57,7 @@ function ConsistencyStyleContent() {
       mode: mode ?? "text",
       refImageSrc: refImage?.src ?? null,
       libraryMood: presetMood,
+      libraryFilter: libraryFilter ?? null,
     }));
     router.push("/consistency/generating");
   };

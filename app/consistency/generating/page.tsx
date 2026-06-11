@@ -18,7 +18,7 @@ export default function ConsistencyGeneratingPage() {
         if (!savedPhotos || !savedStyle) return;
 
         const photos = JSON.parse(savedPhotos) as { id: number; src: string }[];
-        const styleData = JSON.parse(savedStyle) as { preset: string; mode?: string; refImageSrc?: string | null; libraryMood?: string | null };
+        const styleData = JSON.parse(savedStyle) as { preset: string; mode?: string; refImageSrc?: string | null; libraryMood?: string | null; libraryFilter?: string | null };
         const { preset } = styleData;
 
         setProgress(60);
@@ -31,6 +31,7 @@ export default function ConsistencyGeneratingPage() {
             preset,
             mode: styleData.mode || "text",
             reference_image_url: styleData.refImageSrc || null,
+            library_preset_filter: styleData.libraryFilter || null,
           }),
         });
 

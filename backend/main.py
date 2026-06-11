@@ -132,6 +132,7 @@ class MoodEditRequest(BaseModel):
     mode: str = "text"
     reference_image_url: str | None = None
     library_preset: str | None = None
+    library_preset_filter: str | None = None
 
 
 def _mood_fallback(mood: str) -> dict:
@@ -201,9 +202,13 @@ def mood_edit(data: MoodEditRequest):
         result = _claude_vision(data.reference_image_url, text)
 
     elif data.mode == "library" and data.library_preset:
+        filter_info = (
+            f'\nThe preset\'s saved filter is: "{data.library_preset_filter}"\n'
+            if data.library_preset_filter else ""
+        )
         prompt = (
-            f'Based on the saved mood preset named "{data.library_preset}", '
-            f"generate 3 filter variations that expand on this style.\n\n"
+            f'The user has a saved mood preset named "{data.library_preset}".{filter_info}'
+            f"Generate 3 filter variations that build on and expand this style.\n\n"
             f"Return JSON matching this schema:\n{_FILTER_SCHEMA}\n\n{_FILTER_RULES}"
         )
         result = _claude_text(prompt)
@@ -354,6 +359,7 @@ class ConsistencyRequest(BaseModel):
     preset: str
     mode: str = "text"
     reference_image_url: str | None = None
+    library_preset_filter: str | None = None
 
 
 @app.post("/consistency-edit")
@@ -373,8 +379,13 @@ def consistency_edit(data: ConsistencyRequest):
         )
         result = _claude_vision(data.reference_image_url, text)
     elif data.mode == "library" and data.preset:
+        filter_info = (
+            f'\nThe preset\'s saved filter is: "{data.library_preset_filter}"\n'
+            if data.library_preset_filter else ""
+        )
         prompt = (
-            f'Based on the mood preset "{data.preset}", generate a consistent CSS filter for a batch of photos.\n\n'
+            f'The user has a saved mood preset named "{data.preset}".{filter_info}'
+            f"Generate a consistent CSS filter that builds on this style for a batch of photos.\n\n"
             f"Return JSON: {_CONSISTENCY_SCHEMA}\n\n{_CONSISTENCY_RULES}"
         )
         result = _claude_text(prompt)
