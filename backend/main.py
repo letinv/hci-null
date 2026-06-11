@@ -47,6 +47,7 @@ Make the 3 options VISUALLY DISTINCT — vary brightness, contrast, and saturati
 
 def _claude_text(prompt: str) -> dict | None:
     if not _claude:
+        print("[Claude] client not initialized")
         return None
     try:
         msg = _claude.messages.create(
@@ -56,12 +57,14 @@ def _claude_text(prompt: str) -> dict | None:
             messages=[{"role": "user", "content": prompt}],
         )
         return json.loads(msg.content[0].text)
-    except Exception:
+    except Exception as e:
+        print(f"[Claude text error] {type(e).__name__}: {e}")
         return None
 
 
 def _claude_vision(image_url: str, text: str) -> dict | None:
     if not _claude:
+        print("[Claude] client not initialized")
         return None
     try:
         msg = _claude.messages.create(
@@ -77,8 +80,10 @@ def _claude_vision(image_url: str, text: str) -> dict | None:
             }],
         )
         return json.loads(msg.content[0].text)
-    except Exception:
+    except Exception as e:
+        print(f"[Claude vision error] {type(e).__name__}: {e}")
         return None
+
 
 
 # =========================
