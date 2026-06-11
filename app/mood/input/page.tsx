@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../../components/Header";
 import GalleryPicker from "../../components/GalleryPicker";
 
-type InputMode = "text" | "image" | "library" | null;
+type InputMode = "text" | "image" | "preset" | null;
 
 function MoodInputContent() {
   const router = useRouter();
@@ -13,30 +13,30 @@ function MoodInputContent() {
   const [mode, setMode] = useState<InputMode>(null);
   const [moodText, setMoodText] = useState("");
   const [refImage, setRefImage] = useState<{ id: number; src: string } | null>(null);
-  const [libraryMood, setLibraryMood] = useState<string | null>(null);
+  const [presetMood, setPresetMood] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
 
   useEffect(() => {
     const mood = searchParams.get("mood");
     if (mood) {
-      setLibraryMood(mood);
-      setMode("library");
+      setPresetMood(mood);
+      setMode("preset");
       setMoodText("");
       setRefImage(null);
     }
   }, [searchParams]);
 
-  const hasInput = moodText.trim() !== "" || refImage !== null || libraryMood !== null;
+  const hasInput = moodText.trim() !== "" || refImage !== null || presetMood !== null;
 
   const handleModeSelect = (selected: InputMode) => {
     setMode(selected);
     setMoodText("");
     setRefImage(null);
-    setLibraryMood(null);
+    setPresetMood(null);
     setShowError(false);
     if (selected === "image") setShowGallery(true);
-    if (selected === "library") router.push("/library?from=mood-input");
+    if (selected === "preset") router.push("/library?from=mood-input");
   };
 
   const handleGenerate = () => {
@@ -51,7 +51,7 @@ function MoodInputContent() {
       mode: mode ?? "text",
       refImageSrc: refImage?.src ?? null,
       hasRefImage: refImage !== null,
-      libraryMood,
+      presetMood,
       selectedPhoto: selectedPhoto ? JSON.parse(selectedPhoto) : null,
     }));
     router.push("/mood/generating");
@@ -60,7 +60,7 @@ function MoodInputContent() {
   const MODES = [
     { key: "text",    label: "Text" },
     { key: "image",   label: "Reference Image" },
-    { key: "library", label: "Library" },
+    { key: "preset", label: "Saved Presets" },
   ] as const;
 
   return (
@@ -123,11 +123,11 @@ function MoodInputContent() {
           </div>
         )}
 
-        {mode === "library" && libraryMood && (
+        {mode === "preset" && presetMood && (
           <div className="bg-white rounded-2xl p-4 flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 mb-0.5">Selected mood</p>
-              <p className="text-gray-900 font-semibold text-sm">{libraryMood}</p>
+              <p className="text-gray-900 font-semibold text-sm">{presetMood}</p>
             </div>
             <button
               onClick={() => router.push("/library?from=mood-input")}
