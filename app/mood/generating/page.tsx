@@ -26,8 +26,11 @@ export default function GeneratingPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          mood: parsedRequest.moodText,
+          mood: parsedRequest.moodText || parsedRequest.libraryMood || "",
           image_name: parsedRequest.selectedPhoto?.src || "unknown.jpg",
+          mode: parsedRequest.mode || "text",
+          reference_image_url: parsedRequest.refImageSrc || null,
+          library_preset: parsedRequest.libraryMood || null,
         }),
       });
 

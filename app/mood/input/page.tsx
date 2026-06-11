@@ -48,6 +48,8 @@ function MoodInputContent() {
     const selectedPhoto = localStorage.getItem("selectedMoodPhoto");
     localStorage.setItem("moodEditRequest", JSON.stringify({
       moodText: moodText.trim(),
+      mode: mode ?? "text",
+      refImageSrc: refImage?.src ?? null,
       hasRefImage: refImage !== null,
       libraryMood,
       selectedPhoto: selectedPhoto ? JSON.parse(selectedPhoto) : null,

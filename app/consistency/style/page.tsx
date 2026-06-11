@@ -46,7 +46,12 @@ function ConsistencyStyleContent() {
       return;
     }
     const preset = libraryMood ?? styleText.trim();
-    localStorage.setItem("consistencyStyleRequest", JSON.stringify({ preset }));
+    localStorage.setItem("consistencyStyleRequest", JSON.stringify({
+      preset,
+      mode: mode ?? "text",
+      refImageSrc: refImage?.src ?? null,
+      libraryMood,
+    }));
     router.push("/consistency/generating");
   };
 

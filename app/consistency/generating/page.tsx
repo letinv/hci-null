@@ -18,7 +18,8 @@ export default function ConsistencyGeneratingPage() {
         if (!savedPhotos || !savedStyle) return;
 
         const photos = JSON.parse(savedPhotos) as { id: number; src: string }[];
-        const { preset } = JSON.parse(savedStyle) as { preset: string };
+        const styleData = JSON.parse(savedStyle) as { preset: string; mode?: string; refImageSrc?: string | null; libraryMood?: string | null };
+        const { preset } = styleData;
 
         setProgress(60);
 
@@ -28,6 +29,8 @@ export default function ConsistencyGeneratingPage() {
           body: JSON.stringify({
             images: photos.map((p) => p.src),
             preset,
+            mode: styleData.mode || "text",
+            reference_image_url: styleData.refImageSrc || null,
           }),
         });
 
