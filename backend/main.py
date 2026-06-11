@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import json
 import os
+import base64
+import urllib.request
 from pathlib import Path
 
 try:
@@ -73,11 +75,32 @@ def _claude_text(prompt: str) -> dict | None:
         return None
 
 
+def _fetch_image_base64(url: str) -> tuple[str, str] | None:
+    """Fetch image from URL (following redirects) and return (base64_data, media_type)."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            content_type = resp.headers.get("Content-Type", "image/jpeg").split(";")[0].strip()
+            data = resp.read()
+            return base64.standard_b64encode(data).decode("utf-8"), content_type
+    except Exception as e:
+        print(f"[image fetch error] {e}")
+        return None
+
+
 def _claude_vision(image_url: str, text: str) -> dict | None:
     if not _claude:
         print("[Claude] client not initialized")
         return None
     try:
+        fetched = _fetch_image_base64(image_url)
+        if fetched:
+            b64_data, media_type = fetched
+            image_source = {"type": "base64", "media_type": media_type, "data": b64_data}
+        else:
+            # fallback: pass URL directly
+            image_source = {"type": "url", "url": image_url}
+
         msg = _claude.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=1024,
@@ -85,7 +108,7 @@ def _claude_vision(image_url: str, text: str) -> dict | None:
             messages=[{
                 "role": "user",
                 "content": [
-                    {"type": "image", "source": {"type": "url", "url": image_url}},
+                    {"type": "image", "source": image_source},
                     {"type": "text", "text": text},
                 ],
             }],
