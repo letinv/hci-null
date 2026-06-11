@@ -45,6 +45,15 @@ _FILTER_RULES = """CSS filter constraints:
 Make the 3 options VISUALLY DISTINCT — vary brightness, contrast, and saturation significantly across options."""
 
 
+def _parse_claude_json(text: str) -> dict | None:
+    text = text.strip()
+    # strip markdown code fences if present
+    if text.startswith("```"):
+        lines = text.splitlines()
+        text = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
+    return json.loads(text)
+
+
 def _claude_text(prompt: str) -> dict | None:
     if not _claude:
         print("[Claude] client not initialized")
@@ -56,7 +65,9 @@ def _claude_text(prompt: str) -> dict | None:
             system=_SYSTEM,
             messages=[{"role": "user", "content": prompt}],
         )
-        return json.loads(msg.content[0].text)
+        raw = msg.content[0].text if msg.content else ""
+        print(f"[Claude raw] stop={msg.stop_reason} len={len(raw)} preview={raw[:120]!r}")
+        return _parse_claude_json(raw)
     except Exception as e:
         print(f"[Claude text error] {type(e).__name__}: {e}")
         return None
@@ -79,7 +90,9 @@ def _claude_vision(image_url: str, text: str) -> dict | None:
                 ],
             }],
         )
-        return json.loads(msg.content[0].text)
+        raw = msg.content[0].text if msg.content else ""
+        print(f"[Claude vision raw] stop={msg.stop_reason} len={len(raw)} preview={raw[:120]!r}")
+        return _parse_claude_json(raw)
     except Exception as e:
         print(f"[Claude vision error] {type(e).__name__}: {e}")
         return None
